@@ -1,0 +1,77 @@
+#!/bin/bash
+#title 						:cheat.sh
+#description			:Small UI for cheat.sh website
+#author						:Owen Cocjin
+#co-author				:No one right now
+#notes						:Internet connection required
+
+## ---------- FUNCTIONS ---------- ##
+function usage(){
+	echo -e "\nUsage: cheat [-qclh] [VALUES]"
+	echo -e "\tA quick way to utilize the cheat.sh website. Note that the order the flags appear in "
+	echo -e "\nArguments:"
+	echo -e "\t-h, --help\tPrints this screen"
+	echo -e "\t-l,       \tSets the language. Requires -q flag"
+	echo -e "\t-q,       \tTo ask a question. Must be in the format: -q [LANGUAGE] \"[QUESTION]\". Requires -l flag"
+	echo -e "\t-c,       \tSets command. Must be the only flag set when using"
+	echo -e "\n"
+	exit 0
+}
+
+function getCheat(){
+	echo "Getting answer..."
+	printf -v s '%*s' "$COLUMNS"
+	echo -ne "\n\e[34m${s// /*}\e[39m"
+	echo -ne "\e[34m${s// /*}\e[39m\n\n\n"
+	curl cheat.sh/$lanOrCom/${question// /+}
+	echo -ne "\n\n\e[34m${s// /*}\e[39m"
+	echo -ne "\e[34m${s// /*}\e[39m\n\n"
+}
+
+## ---------- VARIABLES ---------- ##
+question=""
+lanOrCom=""
+com=""
+
+## ---------- MAIN ---------- ##
+# Check if cheat.sh is reachable
+ping -c 1 cheat.sh &>/dev/null
+if [[ "$?" != "0" ]]; then
+	echo "Unable to reach cheat.sh site :("
+	exit 1
+fi
+
+#If no flags were set, print usage
+if [[ "$#" == "0" ]] || [[ "${1:0:1}" != "-" ]]; then
+	usage
+fi
+
+while getopts :hl:c:q:-: opt; do
+  case $opt in
+		q)
+			question="$OPTARG"
+			con=""
+		;;
+		l)
+			lanOrCom="$OPTARG"
+			con=""
+		;;
+		c)
+			con="$OPTARG"
+			lanOrCom="$con"
+			question=""
+			getCheat
+		;;
+		h|-|*)
+			if [[ "$OPTARG" -eq "help" ]] || [[ -z "$OPTARG" ]]; then
+				usage
+			fi
+		;;
+	esac
+done
+
+#Check if question flag is raised with language
+#This checks is question is blank,
+if [[ -n "$question" ]] && [[ -n "$lanOrCom" ]]; then
+	getCheat
+fi
