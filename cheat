@@ -26,6 +26,7 @@ function getCheat(){
 	curl cheat.sh/$lanOrCom/${question// /+}
 	echo -ne "\n\n\e[34m${s// /*}\e[39m"
 	echo -ne "\e[34m${s// /*}\e[39m\n\n"
+	exit 0
 }
 
 ## ---------- VARIABLES ---------- ##
@@ -57,10 +58,16 @@ while getopts :hl:c:q:-: opt; do
 			con=""
 		;;
 		c)
-			con="$OPTARG"
-			lanOrCom="$con"
-			question=""
-			getCheat
+			if [[ "$#" == 2 ]]; then
+				con="$OPTARG"
+				lanOrCom="$con"
+				question=""
+				getCheat
+			else
+				echo "Cannot use multiple flags in conjunction with -c"
+				echo -e "See \e[1mcheat --help\e[0m for usage"
+				exit 0
+			fi
 		;;
 		h|-|*)
 			if [[ "$OPTARG" -eq "help" ]] || [[ -z "$OPTARG" ]]; then
@@ -74,4 +81,6 @@ done
 #This checks is question is blank,
 if [[ -n "$question" ]] && [[ -n "$lanOrCom" ]]; then
 	getCheat
+else
+	usage
 fi
