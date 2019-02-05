@@ -6,4 +6,4 @@ for i in ${dirs[@]}; do
 		echo "Copying script to $i..."
 	fi
 done
-echo "done!"
+echo "Done!"
