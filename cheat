@@ -8,14 +8,13 @@
 ## ---------- FUNCTIONS ---------- ##
 function usage(){
 	echo -e '''
-\n\e[33mUsage:\e[0m cheat [-qclh] [VALUES]
+\e[33mUsage:\e[0m cheat [-qclh] [VALUES]
 \tA quick way to utilize the cheat.sh website. Note that the order the flags appear in
 \n\e[33mArguments:\e[0m
 \t-h, --help\tPrints this screen
 \t-l,       \tSets the language. Requires -q flag
 \t-q,       \tTo ask a question. Must be in the format: -q [LANGUAGE] \"[QUESTION]\". Requires -l flag
 \t-c,       \tSets command. Must be the only flag set when using
-\n
 '''
 	exit 0
 }
